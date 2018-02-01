@@ -8,4 +8,4 @@ This repository is still under construction. Workflow step-by-step:
 - extract WF data for other languages containing WF information,
 - harmonization of the data structure.
 
-The output data structure (after harmonization) should look like as a rooted tree as well as in Czech derivation word-formation resource [DeriNet](http://ufal.mff.cuni.cz/derinet) from [UFAL, MFF, Charles University, Prague](http://ufal.mff.cuni.cz/)...
+The output data structure (after harmonization) should look like as a rooted tree as well as in Czech derivation word-formation resource [DeriNet](http://ufal.mff.cuni.cz/derinet) from [UFAL, MFF, Charles University, Prague](http://ufal.mff.cuni.cz/).
