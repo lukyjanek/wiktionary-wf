@@ -1,4 +1,4 @@
-# !urs/bin/env python3
+# !usr/bin/env python3
 # coding: utf-8
 
 from bz2 import BZ2File
@@ -23,7 +23,6 @@ with BZ2File(path) as xml_file:
             tkey = False
         element.clear()
 
-with open('pokus.txt', mode='w', encoding='utf-8') as f:
-    f.write('Number of lexemes: ' + str(len(lexeme_data)) + '\n\n')
+with open('output.txt', mode='w', encoding='utf-8') as f:
     for i,j in lexeme_data.items():
-        f.write(i + '\n' + j + '\n')
+        f.write(i + '_' + str(j[0]) + '\n' + str(j[1]) + '\n\n')

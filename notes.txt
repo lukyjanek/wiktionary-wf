@@ -1,0 +1,5 @@
+cs
+- obsahuje také lexémy jiných jazyků
+- obsahuje zkratky, předpony ('an-'), pronomena a frazémy
+- ne všechny lexémy mají určené slovní druhy ('související', na které nevede žádný odkaz, a zkratky, předpony, frazémy)
+- lze extrahovat také další informace (rozdělení na slabiky, IPA transkripce, významy, synonyma, antonyma, překlady, ...)
