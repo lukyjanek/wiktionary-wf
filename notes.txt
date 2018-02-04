@@ -1,5 +1,16 @@
+ZPRACOVÁNÍ
+- preprocesing > extrakce > vyčištění dat > přiřazené slovních druhů > reflektování vztahů > uložení (> harmonizace)
+- univerzální: preprocesing, extrakce, přiřazení pos, refl. vztahů, uložení
+- univerzální řešeny podle názvu souboru, vybíráno ze slovníků
+- individuální: vyčištění dat
+
+KONKRÉTNÍ ZDROJE
 cs
 - obsahuje také lexémy jiných jazyků
-- obsahuje zkratky, předpony ('an-'), pronomena a frazémy
+- obsahuje zkratky, předpony/přípony ('an-', '-dlo'), pronomena a frazémy
 - ne všechny lexémy mají určené slovní druhy ('související', na které nevede žádný odkaz, a zkratky, předpony, frazémy)
 - lze extrahovat také další informace (rozdělení na slabiky, IPA transkripce, významy, synonyma, antonyma, překlady, ...)
+
+en
+- největší zdroj, obsahuje spoustu ne-anglických lexémů
+- obsahuje sice spoustu lexémů, ale zdá se, že jen málo z nich je detailně popsaných
