@@ -11,7 +11,7 @@ en_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Ve
 regex1 = {'cs' : r'== čeština ==\n(.*\n)*', 'en' : r'==English==\n(.*\n)*'}
 
 # number of languages for lexeme recognitions
-regex2 = {'cs' : r'((?<!=)== )', 'en' : r'----'}
+regex2 = {'cs' : r'((?<!=)== )', 'en' : r'((?<!=)==[A-Z])'}
 
 # extraction language
 regex3 = {'cs' : r'== čeština ==\n(.*\n)*?(== )', 'en' : r'==English==\n(.*\n)*?(----)'}
@@ -20,7 +20,7 @@ regex3 = {'cs' : r'== čeština ==\n(.*\n)*?(== )', 'en' : r'==English==\n(.*\n)
 regex4 = {'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))', 'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))'}
 
 # extraction wf
-regex5 = {'cs' : r'==={1,} související ==={1,}\n(([\*\#].*\n)*)', 'en' : r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n)'}
+regex5 = {'cs' : r'==={1,} související ==={1,}\n(([\*\#].*\n)*)', 'en' : r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'}
 
 def extract(lang, data):
     infos = re.search(regex1[lang], data) # entry contains information for language
@@ -41,43 +41,58 @@ def extract(lang, data):
 def cs(text):
     text = text.replace('=\n', '')
     text = text.replace(' související ', '')
+    text = re.sub(r'\<.*\>', '', text)
     text = text.replace('=', '')
     text = text.replace('* ', '')
     text = text.replace('# ', '')
     text = text.replace('[', '')
     text = text.replace(']', '')
     text = text.replace(', ', '\n')
-    return text.strip().split('\n')
+    return set(text.strip().split('\n'))
 
 def en(text):
+    def clean(entry):
+        entry = entry.replace('{', '')
+        entry = entry.replace('}', '')
+        entry = entry.replace('* ', '')
+        entry = entry.replace('# ', '')
+        entry = entry.replace('] ', '')
+        entry = entry.replace('[', '')
+        entry = entry.replace(']', '')
+        entry = entry.replace('|', '')
+        return entry
     text = text.replace('|pedia=1', '')
+    text = re.sub(r'\{\{(rel)|(der)\-.*?(\}\})', '', text)
+    text = re.sub(r'\(.*?(\))|\{[\{\(]taxlink\|.*?(\))', '', text)
+    text = re.sub(r'ver=[0-9]*', '', text)
+    text = re.sub(r'noshow=1(\s\-\s)*', '', text)
+    text = re.sub(r'\|pos=.*?(\}|\|)', '', text)
+    text = re.sub(r"[Tt]erm(s)* derived.*?(\}|\])", '', text)
     text = text.replace('\n', '')
-    wfs = re.findall(r"(\|\-*\w+(['\-\s]\w+)*\})|([\*\#]\s\[\[\-*\w+(['\-\s]\w+)*\]\])|(\{der[0-9].*?(\}\}))", text, flags=re.UNICODE)
-    out = list()
-    for i in wfs:
-        for j in i:
-            if not (j == ''):
-                if not (j[0] == '{'):
-                    j = j.replace('|', '')
-                    j = j.replace('}', '')
-                    j = j.replace('* ', '')
-                    j = j.replace('# ', '')
-                    j = j.replace('[', '')
-                    j = j.replace(']', '')
-                    out.append(j)
-                else:
-                    j = re.sub(r'\{der[0-9]\|', '', j)
-                    j = re.sub(r'\<.*\>', '', j)
-                    j = re.sub(r'\|*lang=.*?((\|)|(\}\}))', '', j)
-                    j = re.sub(r'\{l\|.*?(\|)', '', j)
-                    j = j.replace('{', '')
-                    j = j.replace('}', '')
-                    j = j.replace('[', '')
-                    j = j.replace('], ', '|')
-                    j = j.replace('] ', '')
-                    j = j.replace(']', '')
-                    j = j.replace('|', '\n')
-                    j = j.split('\n')
-                    for k in j:
-                        out.append(k)
+    wfs1 = re.findall(r"(\|\-*[\w+['’\.\-\s]{1,}]*\-*[\}\]])", text, flags=re.UNICODE)
+    wfs2 = re.findall(r"([\*\#][\s.\w]*\[\[\-*[\w+[’'\.\-\s]*]*\]\])", text, flags=re.UNICODE)
+    wfs3 = re.findall(r"(\{der[0-9].*\}\})", text, flags=re.UNICODE)
+    wfs = wfs1 + wfs2 + wfs3
+    out = set()
+    if not (wfs == []):
+        for entry in wfs:
+            if (entry[0] == '{'):
+                entry = re.sub(r'\|\s*\|', '|', entry)
+                entry = re.sub(r'\{der[0-9]\|', '', entry)
+                entry = re.sub(r'\<.*\>', '', entry)
+                entry = re.sub(r'\|*title=.*?(\|)', '', entry)
+                entry = re.sub(r'\|*lang=.*?((\|)|(\}\}))', '', entry)
+                entry = re.sub(r'\{vern?(\|)', '', entry)
+                entry = re.sub(r'\{l\|.*?(\|)', '', entry)
+                entry = entry.replace('], ', '\n')
+                entry = entry.replace('| ', '\n')
+                entry = entry.replace('|', '\n')
+                entry = clean(entry)
+                entry = re.sub(r'\n.\n', '\n', entry)
+                entry = entry.split('\n')
+                for w in entry:
+                    if not (w == ''): out.add(w.strip())
+            else:
+                entry = clean(entry)
+                if not (entry == ''): out.add(entry.strip())
     return out

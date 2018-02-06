@@ -4,13 +4,21 @@ ZPRACOVÁNÍ
 - univerzální řešeny podle názvu souboru, vybíráno ze slovníků
 - individuální: vyčištění dat
 
+INFO
+- záloha Wiktionary dumps probíhá (přibližně) každý měsíc
+- lze extrahovat také další informace (rozdělení na slabiky, IPA transkripce, významy, synonyma, antonyma, překlady, ...)
+- ne všechny lexémy mají určené slovní druhy (lexémy, na které nevede žádný odkaz, a zkratky, předpony, frazémy)
+
+NÁMĚTY
+- homografa (např. 'drop' N a V) brát zvlášť včetně jejich wf
+
 KONKRÉTNÍ ZDROJE
 cs
 - obsahuje také lexémy jiných jazyků
-- obsahuje zkratky, předpony/přípony ('an-', '-dlo'), pronomena a frazémy
-- ne všechny lexémy mají určené slovní druhy ('související', na které nevede žádný odkaz, a zkratky, předpony, frazémy)
-- lze extrahovat také další informace (rozdělení na slabiky, IPA transkripce, významy, synonyma, antonyma, překlady, ...)
+- obsahuje zkratky, předpony/přípony ('an-', '-dlo'), propria a frazémy
 
 en
-- největší zdroj, obsahuje spoustu ne-anglických lexémů
+- obsahuje také lexémy jiných jazyků
+- obsahuje zkratky, předpony/přípony, propria a frazémy
 - obsahuje sice spoustu lexémů, ale zdá se, že jen málo z nich je detailně popsaných
+- data jsou velmi znečištěna, přes všechnu snahu stále existují lexémy (stovky), pro které jsem dosud neextrahoval jejich deriváty
