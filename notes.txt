@@ -1,4 +1,4 @@
-ZPRACOVÁNÍ
+﻿ZPRACOVÁNÍ
 - preprocesing > extrakce > vyčištění dat > přiřazené slovních druhů > reflektování vztahů > uložení (> harmonizace)
 - univerzální: preprocesing, extrakce, přiřazení pos, refl. vztahů, uložení
 - univerzální řešeny podle názvu souboru, vybíráno ze slovníků
@@ -22,3 +22,6 @@ en
 - obsahuje zkratky, předpony/přípony, propria a frazémy
 - obsahuje sice spoustu lexémů, ale zdá se, že jen málo z nich je detailně popsaných
 - data jsou velmi znečištěna, přes všechnu snahu stále existují lexémy (stovky), pro které jsem dosud neextrahoval jejich deriváty
+
+fr
+- francouzi na wiktionary postavili spoustu svých morfologických a lexikálních zdrojů (http://redac.univ-tlse2.fr/lexiques/index.html)
