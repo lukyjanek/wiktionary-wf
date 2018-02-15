@@ -20,8 +20,8 @@ with BZ2File(path) as xml_file:
             title = element.text
         elif (element.tag[43:] == 'ns') and (element.text == '0'): # unlock saving lexeme if it is lexeme
             tkey = True
-            stat.add_active_lexeme()
         elif (element.tag[43:] == 'text') and (tkey is True): # save informations about lexeme
+            stat.add_active_lexeme()
             data = extract(lang=path[5:7], data=element.text) # extraction informations for lexeme
             if not (data is None):
                 if not (data[1] == set()):
