@@ -99,48 +99,4 @@ def en(text):
     return out
 
 def my(text):
-    def clean(entry):
-        entry = entry.replace('{', '')
-        entry = entry.replace('}', '')
-        entry = entry.replace('* ', '')
-        entry = entry.replace('# ', '')
-        entry = entry.replace('] ', '')
-        entry = entry.replace('[', '')
-        entry = entry.replace(']', '')
-        entry = entry.replace('|', '')
-        return entry
-    text = text.replace('|pedia=1', '')
-    text = re.sub(r'\{\{(rel)|(der)\-.*?(\}\})', '', text)
-    text = re.sub(r'\(.*?(\))|\{[\{\(]taxlink\|.*?(\))', '', text)
-    text = re.sub(r'ver=[0-9]*', '', text)
-    text = re.sub(r'noshow=1(\s\-\s)*', '', text)
-    text = re.sub(r'\|pos=.*?(\}|\|)', '', text)
-    text = re.sub(r"[Tt]erm(s)* derived.*?(\}|\])", '', text)
-    text = text.replace('\n', '')
-    wfs1 = re.findall(r"(\|\-*[\w+['’\.\-\s]{1,}]*\-*[\}\]])", text, flags=re.UNICODE)
-    wfs2 = re.findall(r"([\*\#][\s.\w]*\[\[\-*[\w+[’'\.\-\s]*]*\]\])", text, flags=re.UNICODE)
-    wfs3 = re.findall(r"(\{der[0-9].*\}\})", text, flags=re.UNICODE)
-    wfs = wfs1 + wfs2 + wfs3
-    out = set()
-    if not (wfs == []):
-        for entry in wfs:
-            if (entry[0] == '{'):
-                entry = re.sub(r'\|\s*\|', '|', entry)
-                entry = re.sub(r'\{der[0-9]\|', '', entry)
-                entry = re.sub(r'\<.*\>', '', entry)
-                entry = re.sub(r'\|*title=.*?(\|)', '', entry)
-                entry = re.sub(r'\|*lang=.*?((\|)|(\}\}))', '', entry)
-                entry = re.sub(r'\{vern?(\|)', '', entry)
-                entry = re.sub(r'\{l\|.*?(\|)', '', entry)
-                entry = entry.replace('], ', '\n')
-                entry = entry.replace('| ', '\n')
-                entry = entry.replace('|', '\n')
-                entry = clean(entry)
-                entry = re.sub(r'\n.\n', '\n', entry)
-                entry = entry.split('\n')
-                for w in entry:
-                    if not (w == ''): out.add(w.strip())
-            else:
-                entry = clean(entry)
-                if not (entry == ''): out.add(entry.strip())
-    return out
+    return en(text)
