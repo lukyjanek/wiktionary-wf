@@ -93,6 +93,15 @@ def filter_composites(dic):
             composites[root] = parents
     return composites
 
+def merge_dicts(dic1, dic2):
+    outdic = defaultdict(set)
+    for root,parents in dic1.items():
+        for parent in parents:
+            outdic[root].add(parent)
+    for root,parents in dic2.items():
+        for parent in parents:
+            outdic[root].add(parent)
+    return outdic
 
 def print_existance(namefolder, nameside, side, side_one, side_more):
     with open('output/' + namefolder + '/wkt-' + nameside + '-derinet.txt', mode='w', encoding='utf-8') as f:
@@ -122,28 +131,6 @@ def print_root_parents(namefolder, note, dic):
         for root in sorted(dic, key=lambda root: len(dic[root]), reverse=True):
             f.write(root + '\t' + str(dic[root]) + '\n')
 
-def merge_dicts(dic1, dic2):
-    outdic = dic1
-    for root,parents in dic2.items():
-        if (root in outdic):
-            for parent in parents:
-                if not (parent in outdic[root]):
-                    outdic[root].add(parent)
-        else:
-            for parent in parents:
-                outdic[root].add(parent)
-    return outdic
-
-def merge_dicts2(dic1, dic2):
-    outdic = defaultdict(set)
-    for root,parents in dic1.items():
-        for parent in parents:
-            outdic[root].add(parent)
-    for root,parents in dic2.items():
-        for parent in parents:
-            outdic[root].add(parent)
-    return outdic
-
 if (__name__ == '__main__'):
     der = DeriNet('data/derinet-1-5-1.tsv')
 
@@ -172,7 +159,7 @@ if (__name__ == '__main__'):
     print_root_parents('cs', 'just', csjustparents)
 
     # merging lists
-    mergedcomposites = merge_dicts2(cscomposites, encomposites)
+    mergedcomposites = merge_dicts(cscomposites, encomposites)
     print_root_parents('', 'merged-comp', mergedcomposites)
-    mergedjust = merge_dicts2(csjustparents, enjustparents)
+    mergedjust = merge_dicts(csjustparents, enjustparents)
     print_root_parents('', 'merged-just', mergedjust)
