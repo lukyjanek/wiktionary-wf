@@ -3,10 +3,11 @@
 
 from bz2 import BZ2File
 import xml.etree.ElementTree as ET
+from collections import defaultdict
 from extraction import extract
 from statistics import Statistics
 
-path = 'data/cswiktionary-20180120-pages-articles-multistream.xml.bz2'
+path = 'data/mywiktionary-20180120-pages-articles-multistream.xml.bz2'
 
 stat = Statistics() # for output statistics
 
@@ -41,23 +42,24 @@ for i,j in lexeme_data.items():
     lexeme_pos[i] = str(j[0])
 
 # Part-of-speech tagging and WF relations making
-lexeme_relations = dict() # dict of relations: lexeme_relations[child] = parent
+lexeme_relations = defaultdict(list) # dict of relations
 for i,j in lexeme_data.items():
     for lex in j[1]:
         parent = i + '_' + str(j[0])
         if (lex in lexeme_pos): child = lex + '_' + lexeme_pos[lex]
         else: child = lex + '_None'
-        lexeme_relations[child] = parent
+        lexeme_relations[child].append(parent)
         stat.add_vocabulary(child)
         stat.add_vocabulary(parent)
         stat.add_relations()
 
-lexeme_data = None # allow memory space
+lexeme_data = None # clearing memory space
 
 # Saving data
 with open('output/' + path[5:7] + '_data.txt', mode='w', encoding='utf-8') as f:
-    for child,parent in lexeme_relations.items():
-        f.write(child + '\t' + parent + '\n')
+    for child,parents in lexeme_relations.items():
+        for parent in parents:
+            f.write(child + '\t' + parent + '\n')
 
 # Saving statistics
 with open('output/STATISTICS.txt', mode='a', encoding='utf-8') as f:

@@ -4,18 +4,9 @@
 from derinet.derinet import DeriNet
 from derinet.utils import Node
 
-def wkt_data(path): # loading data
-    relations = dict()
-    wordlist = set()
-    with open(path, mode='r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip().split('\t')
-            relations[line[0]] = line[1]
-            wordlist.add(line[0])
-            wordlist.add(line[1])
-    return relations, wordlist
-
-def comparison(der, wordlist, relations, name):
+def comparison(path1, path2, name):
+    der1_wkt = DeriNet(path1)
+    der2_der = DerinNet(path2)
     # comparison 1: is lexeme from Wiktionary in or out of DeriNet
     def inDeriNet(word):
         lexeme = word.split('_')[0]
@@ -39,7 +30,7 @@ def comparison(der, wordlist, relations, name):
     for w in outside_list:
         if (' ' in w): more_word.append(w)
         else: one_word.append(w)
-    with open('output/' + name[:2].lower() + '-in-or-out-derinet.txt', mode='w', encoding='utf-8') as f:
+    with open('output/' + name[:2].lower() + '_harm-in-or-out-derinet.txt', mode='w', encoding='utf-8') as f:
         f.write(name + ' MUTATION OF WIKTIONARY COMPARED WITH DERINET\n')
         f.write('Number of lexemes in Wiktionary AND DeriNet: ' + str(inside) + '\n')
         f.write('Number of lexemes in Wiktionary NOT in DeriNet: ' + str(outside) + '\n')
@@ -67,7 +58,7 @@ def comparison(der, wordlist, relations, name):
             with_parent += 1
             with_parent_dict[node.lemma + '_' + node.pos] = relations[node.lemma + '_None']
             if (inDeriNet(relations[node.lemma + '_None']) is True): parent_in_derinet +=1
-    with open('output/' + name[:2].lower() + '-parent-wkt-not-derinet.txt', mode='w', encoding='utf-8') as f:
+    with open('output/' + name[:2].lower() + '_harm-parent-wkt-not-derinet.txt', mode='w', encoding='utf-8') as f:
         f.write(name + ' MUTATION OF WIKTIONARY COMPARED WITH DERINET\n')
         f.write('Number of lexemes having parent in Wiktionary and not in DeriNet (and founded parent exists in DeriNet a lexeme): ' + str(parent_in_derinet) + '\n')
         f.write('Number of lexemes having parent in Wiktionary and not in DeriNet: ' + str(with_parent) + '\n')
@@ -77,8 +68,5 @@ def comparison(der, wordlist, relations, name):
             f.write(child + '\t' + parent + '\n')
 
 if (__name__ == '__main__'):
-    der = DeriNet('data/derinet-1-5-1.tsv')
-    relations, wordlist = wkt_data('data/cs_wkt.txt')
-    comparison(der, wordlist, relations, 'CZECH')
-    relations, wordlist = wkt_data('data/en_wkt.txt')
-    comparison(der, wordlist, relations, 'ENGLISH')
+    comparison('data/cs_wkt_harm_data.tsv', 'data/derinet-1-5-1.tsv', 'CZECH')
+    comparison('data/en_wkt_harm_data.tsv', 'data/derinet-1-5-1.tsv', 'ENGLISH')
