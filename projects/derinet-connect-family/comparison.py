@@ -87,11 +87,14 @@ def filter_parents_out(der, dic): # filter parents which are childs of root
     return parentsout
 
 def filter_composites(dic):
+    noncomposites = defaultdict()
     composites = defaultdict()
     for root,parents in dic.items():
         if (root.split('_')[1][-1] == 'C'):
             composites[root] = parents
-    return composites
+        else:
+            noncomposites[root] = parents
+    return composites, noncomposites
 
 def merge_dicts(dic1, dic2):
     outdic = defaultdict(set)
@@ -129,7 +132,17 @@ def print_root_parents(namefolder, note, dic):
         f.write('Number of DeriNets roots in this file: ' + str(len(dic)) + '\n')
         f.write('===========\n')
         for root in sorted(dic, key=lambda root: len(dic[root]), reverse=True):
-            f.write(root + '\t' + str(dic[root]) + '\n')
+            parents = list(dic[root])
+            if (len(parents) == 1):
+                if (len(root) < len(parents[0])):
+                    f.write(parents[0] + '\t' + root + '*\n')
+                else:
+                    f.write(root + '\t' + parents[0] + '\n')
+            else:
+                strparents = parents[0]
+                for parent in parents[1:]:
+                    strparents += '; ' + parent
+                f.write(root + '\t' + strparents + '\n')
 
 if (__name__ == '__main__'):
     der = DeriNet('data/derinet-1-5-1.tsv')
@@ -139,27 +152,27 @@ if (__name__ == '__main__'):
     eninside, enoutside, eninside_more, eninside_one, enoutside_more, enoutside_one = exist_in_derinet(der, enwordlist)
     enexistedparents = parents_for_derinet_root(der, enrelations)
     enjustparents = filter_parents_out(der, enexistedparents)
-    encomposites = filter_composites(enjustparents)
+    encomposites, enothers = filter_composites(enjustparents)
 
     print_existance('en', 'inside', eninside, eninside_one, eninside_more)
     print_existance('en', 'outside', enoutside, enoutside_one, enoutside_more)
     print_root_parents('en', 'comp', encomposites)
-    print_root_parents('en', 'just', enjustparents)
+    print_root_parents('en', 'notcomp', enothers)
 
     # czech mutation of Wiktionary
     cswordlist, csrelations = load_wkt('data/cs_wkt.txt')
     csinside, csoutside, csinside_more, csinside_one, csoutside_more, csoutside_one = exist_in_derinet(der, cswordlist)
     csexistedparents = parents_for_derinet_root(der, csrelations)
     csjustparents = filter_parents_out(der, csexistedparents)
-    cscomposites = filter_composites(csjustparents)
+    cscomposites, csothers = filter_composites(csjustparents)
 
     print_existance('cs', 'inside', csinside, csinside_one, csinside_more)
     print_existance('cs', 'outside', csoutside, csoutside_one, csoutside_more)
     print_root_parents('cs', 'comp', cscomposites)
-    print_root_parents('cs', 'just', csjustparents)
+    print_root_parents('cs', 'notcomp', csothers)
 
     # merging lists
     mergedcomposites = merge_dicts(cscomposites, encomposites)
     print_root_parents('', 'merged-comp', mergedcomposites)
-    mergedjust = merge_dicts(csjustparents, enjustparents)
-    print_root_parents('', 'merged-just', mergedjust)
+    mergedjust = merge_dicts(csothers, enothers)
+    print_root_parents('', 'merged-notcomp', mergedjust)

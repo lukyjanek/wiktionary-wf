@@ -6,34 +6,77 @@ import re
 # translation of pos tag
 cs_pos = {'podstatné jméno' : 'N', 'přídavné jméno' : 'A', 'zájmeno' : 'P', 'číslovka' : 'C', 'sloveso' : 'V', 'příslovce' : 'D', 'předložka' : 'R', 'spojka' : 'J', 'citoslovce' : 'I', 'částice' : 'T'}
 en_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
-my_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
+ze_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
 
 # language recognition
-regex1 = {'cs' : r'== čeština ==\n(.*\n)*', 'en' : r'==English==\n(.*\n)*.*', 'my' : r'==Czech==\n(.*\n)*.*'}
+regex1 = {
+'cs' : r'== čeština ==\n(.*\n)*',
+'en' : r'==English==\n(.*\n)*.*',
+'de' : r'Sprache\|Deutsch.*\n(.*\n)*',
+'ze' : r'==Czech==\n(.*\n)*.*',
+'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*'
+}
 
 # number of languages for lexeme recognitions
-regex2 = {'cs' : r'((?<!=)== )', 'en' : r'((?<!=)==[A-Z])', 'my' : r'((?<!=)==[A-Z])'}
+regex2 = {
+'cs' : r'((?<!=)== )',
+'en' : r'((?<!=)==[A-Z])',
+'de' : r'Sprache\|\w+',
+'ze' : r'((?<!=)==[A-Z])',
+'zd' : r'Sprache\|\w+'
+}
 
 # extraction language
-regex3 = {'cs' : r'== čeština ==\n(.*\n)*?(== )', 'en' : r'==English==\n(.*\n)*?(----)', 'my' : r'==Czech==\n(.*\n)*?(----)'}
+regex3 = {
+'cs' : r'== čeština ==\n(.*\n)*?(== )',
+'en' : r'==English==\n(.*\n)*?(----)',
+'de' : r'Sprache\|Deutsch.*\n(.*\n)*?(== )',
+'ze' : r'==Czech==\n(.*\n)*?(----)',
+'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*?(== )'
+}
 
 # extraction pos
-regex4 = {'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))', 'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))', 'my' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))'}
+regex4 = {
+'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))',
+'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
+'ze' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))'
+}
 
 # extraction wf
-regex5 = {'cs' : r'==={1,} související ==={1,}\n(([\*\#].*\n)*)', 'en' : r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})', 'my' : r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'}
+regex5 = {
+'cs' : [r'==={1,} související ==={1,}\n(([\*\#].*\n)*)'],
+'en' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
+'de' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
+'ze' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
+'zd' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
+}
 
 def extract(lang, data):
-    infos = re.search(regex1[lang], data) # entry contains information for language
+    # entry contains information for language
+    infos = re.search(regex1[lang], data)
+
     if (infos):
-        more = re.findall(regex2[lang], infos.group(0)) # number of languages in entry
+        # number of languages in entry
+        more = re.findall(regex2[lang], infos.group(0))
         if (len(more) > 1):
-            infos = re.search(regex3[lang], infos.group(0)) # extract one language only
+            # extract one language only
+            infos = re.search(regex3[lang], infos.group(0))
             if not (infos): return None
-        pos = re.search(regex4[lang], infos.group(0)) # extract pos
-        wf = re.search(regex5[lang], infos.group(0)) # extract wf relations
-        if not (wf is None):
-            wfs = eval(lang)(wf.group(0)) # cleaning data, how dangerous 'eval()' is?
+
+        # extract pos
+        pos = re.search(regex4[lang], infos.group(0))
+
+        # extract wf relations
+        wf = ''
+        for reg in regex5[lang]:
+            derivations = re.search(reg, infos.group(0))
+            if not (derivations is None): wf += derivations.group(0)
+
+        # cleaning and returning data
+        if not (wf is ''):
+            # cleaning data, how dangerous 'eval()' is?
+            wfs = eval(lang)(wf)
+
             if (pos is None): return pos, wfs
             return eval(lang+'_pos')[pos.group(1)], wfs # how dangerous 'eval()' is?
     return None
@@ -98,5 +141,12 @@ def en(text):
                 if not (entry == ''): out.add(entry.strip())
     return out
 
-def my(text):
+def de(text):
+    return text
+
+# project derinet-connect-family
+def ze(text):
     return en(text)
+
+def zd(text):
+    return de(text)
