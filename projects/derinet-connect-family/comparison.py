@@ -96,6 +96,21 @@ def filter_composites(dic):
             noncomposites[root] = parents
     return composites, noncomposites
 
+def filter_length(dic):
+    out = defaultdict(set)
+    for root,parents in dic.items():
+        parents = list(parents)
+        if (len(parents) == 1):
+            if (len(root) < len(parents[0])):
+                out[parents[0]].add(root)
+            else:
+                out[root].add(parents[0])
+        else:
+            for parent in parents:
+                out[root].add(parent)
+    return out
+
+
 def merge_dicts(dic1, dic2):
     outdic = defaultdict(set)
     for root,parents in dic1.items():
@@ -133,16 +148,10 @@ def print_root_parents(namefolder, note, dic):
         f.write('===========\n')
         for root in sorted(dic, key=lambda root: len(dic[root]), reverse=True):
             parents = list(dic[root])
-            if (len(parents) == 1):
-                if (len(root) < len(parents[0])):
-                    f.write(parents[0] + '\t' + root + '*\n')
-                else:
-                    f.write(root + '\t' + parents[0] + '\n')
-            else:
-                strparents = parents[0]
-                for parent in parents[1:]:
-                    strparents += '; ' + parent
-                f.write(root + '\t' + strparents + '\n')
+            strparents = parents[0]
+            for parent in parents[1:]:
+                strparents += '; ' + parent
+            f.write(root + '\t' + strparents + '\n')
 
 if (__name__ == '__main__'):
     der = DeriNet('data/derinet-1-5-1.tsv')
@@ -154,8 +163,12 @@ if (__name__ == '__main__'):
     enjustparents = filter_parents_out(der, enexistedparents)
     encomposites, enothers = filter_composites(enjustparents)
 
+    encomposites = filter_length(encomposites)
+    enothers = filter_length(enothers)
+
     print_existance('en', 'inside', eninside, eninside_one, eninside_more)
     print_existance('en', 'outside', enoutside, enoutside_one, enoutside_more)
+
     print_root_parents('en', 'comp', encomposites)
     print_root_parents('en', 'notcomp', enothers)
 
@@ -166,13 +179,20 @@ if (__name__ == '__main__'):
     csjustparents = filter_parents_out(der, csexistedparents)
     cscomposites, csothers = filter_composites(csjustparents)
 
+    cscomposites = filter_length(cscomposites)
+    csothers = filter_length(csothers)
+
     print_existance('cs', 'inside', csinside, csinside_one, csinside_more)
     print_existance('cs', 'outside', csoutside, csoutside_one, csoutside_more)
+
     print_root_parents('cs', 'comp', cscomposites)
     print_root_parents('cs', 'notcomp', csothers)
 
     # merging lists
     mergedcomposites = merge_dicts(cscomposites, encomposites)
+    mergedcomposites = filter_length(mergedcomposites)
     print_root_parents('', 'merged-comp', mergedcomposites)
+
     mergedjust = merge_dicts(csothers, enothers)
+    mergedjust = filter_length(mergedjust)
     print_root_parents('', 'merged-notcomp', mergedjust)
