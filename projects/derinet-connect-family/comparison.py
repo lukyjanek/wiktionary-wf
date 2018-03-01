@@ -110,42 +110,15 @@ def filter_length(dic):
                 out[root].add(parent)
     return out
 
-
-def merge_dicts(dic1, dic2):
-    outdic = defaultdict(set)
-    for root,parents in dic1.items():
-        for parent in parents:
-            outdic[root].add(parent)
-    for root,parents in dic2.items():
-        for parent in parents:
-            outdic[root].add(parent)
-    return outdic
-
-def print_existance(namefolder, nameside, side, side_one, side_more):
-    with open('output/' + namefolder + '/wkt-' + nameside + '-derinet.txt', mode='w', encoding='utf-8') as f:
-        f.write('Number of lexemes in Wiktionary ' + nameside + ' DeriNet (all): ' + str(len(side)) + '\n')
-        f.write('Number of lexemes in Wiktionary ' + nameside + ' DeriNet (one-word): ' + str(len(side_one)) + '\n')
-        f.write('Number of lexemes in Wiktionary ' + nameside + ' DeriNet (more-word): ' + str(len(side_more)) + '\n')
-        f.write('===========\n')
-        f.write('ALL\n')
-        f.write('===========\n')
-        for w in side:
-            f.write(w + '\n')
-        f.write('===========\n')
-        f.write('ONE-WORD\n')
-        f.write('===========\n')
-        for w in side_one:
-            f.write(w + '\n')
-        f.write('===========\n')
-        f.write('MORE-WORD\n')
-        f.write('===========\n')
-        for w in side_more:
+def print_existance(path, nameside, data):
+    with open(file=path, mode='w', encoding='utf-8') as f:
+        f.write('### Number of lexemes in Wiktionary and ' + nameside + ' DeriNet (all): ' + str(len(data)) + ' ###\n\n')
+        for w in data:
             f.write(w + '\n')
 
-def print_root_parents(namefolder, note, dic):
-    with open('output/' + namefolder + '/parent-for-derinets-roots-' + note + '.txt', mode='w', encoding='utf-8') as f:
-        f.write('Number of DeriNets roots in this file: ' + str(len(dic)) + '\n')
-        f.write('===========\n')
+def print_root_parents(path, dic):
+    with open(file=path, mode='w', encoding='utf-8') as f:
+        f.write('### Number of DeriNets roots with parents in Wiktionary (in this file): ' + str(len(dic)) + ' ###\n\n')
         for root in sorted(dic, key=lambda root: len(dic[root]), reverse=True):
             parents = list(dic[root])
             strparents = parents[0]
@@ -154,45 +127,41 @@ def print_root_parents(namefolder, note, dic):
             f.write(root + '\t' + strparents + '\n')
 
 if (__name__ == '__main__'):
-    der = DeriNet('data/derinet-1-5-1.tsv')
+    # arguments parsing
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-w', action='store', dest='w', required=True, help='the Wiktionary data')
+    parser.add_argument('-d', action='store', dest='d', required=True, help='the DeriNet data')
+    parser.add_argument('-i', action='store', dest='i', required=False, help='the output for file with inside lexemes')
+    parser.add_argument('-o', action='store', dest='o', required=False, help='the output for file with outside lexemes')
+    parser.add_argument('-c', action='store', dest='c', required=False, help='the output for file with composites')
+    parser.add_argument('-n', action='store', dest='n', required=False, help='the output for file with noncomposites')
+    parser.add_argument('-a', action='store', dest='a', required=False, help='the output for file with all lexemes')
+    par = parser.parse_args()
 
-    # english mutation of Wiktionary
-    enwordlist, enrelations = load_wkt('data/en_wkt.txt')
-    eninside, enoutside, eninside_more, eninside_one, enoutside_more, enoutside_one = exist_in_derinet(der, enwordlist)
-    enexistedparents = parents_for_derinet_root(der, enrelations)
-    enjustparents = filter_parents_out(der, enexistedparents)
-    encomposites, enothers = filter_composites(enjustparents)
+    # loading data
+    der = DeriNet(par.d)
+    wordlist, relations = load_wkt(par.w)
 
-    encomposites = filter_length(encomposites)
-    enothers = filter_length(enothers)
+    # creating and saving lists of Wiktionary lexemes inside/outside of DeriNet
+    if (par.i) or (par.o):
+        inside, outside, inside_more, inside_one, outside_more, outside_one = exist_in_derinet(der, wordlist)
+        if (par.i):
+            print_existance(par.i, 'inside', inside)
+        if (par.o):
+            print_existance(par.o, 'outside', outside)
 
-    print_existance('en', 'inside', eninside, eninside_one, eninside_more)
-    print_existance('en', 'outside', enoutside, enoutside_one, enoutside_more)
-
-    print_root_parents('en', 'comp', encomposites)
-    print_root_parents('en', 'notcomp', enothers)
-
-    # czech mutation of Wiktionary
-    cswordlist, csrelations = load_wkt('data/cs_wkt.txt')
-    csinside, csoutside, csinside_more, csinside_one, csoutside_more, csoutside_one = exist_in_derinet(der, cswordlist)
-    csexistedparents = parents_for_derinet_root(der, csrelations)
-    csjustparents = filter_parents_out(der, csexistedparents)
-    cscomposites, csothers = filter_composites(csjustparents)
-
-    cscomposites = filter_length(cscomposites)
-    csothers = filter_length(csothers)
-
-    print_existance('cs', 'inside', csinside, csinside_one, csinside_more)
-    print_existance('cs', 'outside', csoutside, csoutside_one, csoutside_more)
-
-    print_root_parents('cs', 'comp', cscomposites)
-    print_root_parents('cs', 'notcomp', csothers)
-
-    # merging lists
-    mergedcomposites = merge_dicts(cscomposites, encomposites)
-    mergedcomposites = filter_length(mergedcomposites)
-    print_root_parents('', 'merged-comp', mergedcomposites)
-
-    mergedjust = merge_dicts(csothers, enothers)
-    mergedjust = filter_length(mergedjust)
-    print_root_parents('', 'merged-notcomp', mergedjust)
+    # creating and saving lists of DeriNets root having parent(s) in Wiktionary
+    if (par.c) or (par.n) or (par.a):
+        existedparents = parents_for_derinet_root(der, relations)
+        allexisted = filter_parents_out(der, existedparents)
+        composites, noncomposites = filter_composites(allexisted)
+        if (par.c):
+            composites = filter_length(composites)
+            print_root_parents(par.c, composites)
+        if (par.n):
+            noncomposites = filter_length(noncomposites)
+            print_root_parents(par.n, noncomposites)
+        if (par.a):
+            allexisted = filter_length(allexisted)
+            print_root_parents(par.a, allexisted)

@@ -86,7 +86,7 @@ def derinet(path):
     return (wordlist, relations, propriums, more_word, word_pos, parent_children, child_parents)
 
 def save(wordlist, relations, propriums, more_word, word_pos, parent_children, child_parents, name):
-    with open('output/' + name + '-input-statistics.txt', mode='w', encoding='utf-8') as f:
+    with open(file=name, mode='w', encoding='utf-8') as f:
         f.write('Number of lexemes: ' + str(wordlist) + '\n')
         f.write('Number of relations: ' + str(relations) + '\n')
         f.write('Number of propriums: ' + str(propriums) + '\n')
@@ -102,11 +102,19 @@ def save(wordlist, relations, propriums, more_word, word_pos, parent_children, c
             f.write(str(i) + '\t' + str(n) + '\n')
 
 if (__name__ == '__main__'):
-    results = wkt('data/cs_wkt.txt')
-    save(results[0], results[1], results[2], results[3], results[4], results[5], results[6], 'cs')
+    # arguments parsing
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-w', action='store', dest='w', required=False, help='the Wiktionary data, choose only one (-w OR -d)')
+    parser.add_argument('-d', action='store', dest='d', required=False, help='the DeriNet data, choose only one (-w OR -d)')
+    parser.add_argument('-s', action='store', dest='s', required=True, help='the file for basic statistics')
+    par = parser.parse_args()
 
-    results = wkt('data/en_wkt.txt')
-    save(results[0], results[1], results[2], results[3], results[4], results[5], results[6], 'en')
-
-    results = derinet('data/derinet-1-5-1.tsv')
-    save(results[0], results[1], results[2], results[3], results[4], results[5], results[6], 'der')
+    if (par.w):
+        results = wkt(par.w)
+        save(results[0], results[1], results[2], results[3], results[4], results[5], results[6], par.s)
+    elif (par.d):
+        results = derinet(par.d)
+        save(results[0], results[1], results[2], results[3], results[4], results[5], results[6], par.s)
+    else:
+        print('Fill some file as argument. Parametr -w is for Wiktionary data, parametr -d for Derinet data.')

@@ -6,7 +6,9 @@ import re
 # translation of pos tag
 cs_pos = {'podstatné jméno' : 'N', 'přídavné jméno' : 'A', 'zájmeno' : 'P', 'číslovka' : 'C', 'sloveso' : 'V', 'příslovce' : 'D', 'předložka' : 'R', 'spojka' : 'J', 'citoslovce' : 'I', 'částice' : 'T'}
 en_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
+de_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
 ze_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
+zd_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
 
 # language recognition
 regex1 = {
@@ -39,7 +41,9 @@ regex3 = {
 regex4 = {
 'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))',
 'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
-'ze' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))'
+'de' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))',
+'ze' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
+'zd' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))'
 }
 
 # extraction wf
@@ -76,7 +80,6 @@ def extract(lang, data):
         if not (wf is ''):
             # cleaning data, how dangerous 'eval()' is?
             wfs = eval(lang)(wf)
-
             if (pos is None): return pos, wfs
             return eval(lang+'_pos')[pos.group(1)], wfs # how dangerous 'eval()' is?
     return None
@@ -142,7 +145,33 @@ def en(text):
     return out
 
 def de(text):
-    return text
+    text = text.replace('=', '')
+    text = text.replace(':', '')
+    text = text.replace('{', '')
+    text = text.replace('}', '')
+    text = text.replace('/', ',')
+    text = text.replace(';', ',')
+    text = text.replace('Wortbildungen', ',')
+    text = text.replace('Verkleinerungsformen', ',')
+    text = text.replace('Weibliche Wortformen', ',')
+    text = text.replace('Männliche Wortformen', ',')
+    text = text.replace('Koseformen', ',')
+    text = re.sub(r'\[([0-9][\,\s\-\–]*)*\]', '', text)
+    text = re.sub(r'[\-\–].*?(\,|\n)', ',', text)
+    text = re.sub(r'\#.*?(\])', '', text)
+    text = re.sub(r"\'.*\'", '', text)
+    text = text.replace("'", '')
+    text = text.replace('\n', '')
+
+    wfs = set()
+    for word in text.split(','):
+        word = word.strip()
+        word = word.replace('[', '')
+        word = word.replace(']', '')
+        if not (word == ''):
+            wfs.add(word)
+
+    return wfs
 
 # project derinet-connect-family
 def ze(text):
