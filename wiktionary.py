@@ -82,7 +82,7 @@ with open(par.o, mode='w', encoding='utf-8') as f:
 # Saving statistics
 if (par.s):
     with open(par.s, mode='w', encoding='utf-8') as f:
-        f.write(path[5:7].upper() + '\n')
+        f.write(par.o + '\n')
         f.write('Number of active lexemes in Wiktionary: ' + str(stat.get_active_lexeme()) + '\n')
         f.write('Number of extracted lexemes with wf from Wiktionary: ' + str(len(stat.get_vocabulary())) + '\n')
         f.write('Number of extracted wf relations: ' + str(stat.get_relations()) + '\n')

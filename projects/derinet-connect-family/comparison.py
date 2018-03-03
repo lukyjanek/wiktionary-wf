@@ -96,13 +96,13 @@ def filter_composites(dic):
             noncomposites[root] = parents
     return composites, noncomposites
 
-def filter_length(dic):
+def rotate_length(dic):
     out = defaultdict(set)
     for root,parents in dic.items():
         parents = list(parents)
         if (len(parents) == 1):
-            if (len(root) < len(parents[0])):
-                out[parents[0]].add(root)
+            if (len(root.split('_')[0]) < len(parents[0].split('_')[0])):
+                out[parents[0]].add(root+'*')
             else:
                 out[root].add(parents[0])
         else:
@@ -113,7 +113,7 @@ def filter_length(dic):
 def print_existance(path, nameside, data):
     with open(file=path, mode='w', encoding='utf-8') as f:
         f.write('### Number of lexemes in Wiktionary and ' + nameside + ' DeriNet (all): ' + str(len(data)) + ' ###\n\n')
-        for w in data:
+        for w in sorted(data):
             f.write(w + '\n')
 
 def print_root_parents(path, dic):
@@ -157,11 +157,11 @@ if (__name__ == '__main__'):
         allexisted = filter_parents_out(der, existedparents)
         composites, noncomposites = filter_composites(allexisted)
         if (par.c):
-            composites = filter_length(composites)
+            composites = rotate_length(composites)
             print_root_parents(par.c, composites)
         if (par.n):
-            noncomposites = filter_length(noncomposites)
+            noncomposites = rotate_length(noncomposites)
             print_root_parents(par.n, noncomposites)
         if (par.a):
-            allexisted = filter_length(allexisted)
+            allexisted = rotate_length(allexisted)
             print_root_parents(par.a, allexisted)

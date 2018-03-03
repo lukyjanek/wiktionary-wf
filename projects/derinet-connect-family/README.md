@@ -2,18 +2,11 @@
 This folder contains codes for the project builded on the extraction of the derivational word-formation relations from [Wiktionary](https://www.wiktionary.org/). The goal of this project is to connect unconnected lexemes in DeriNet using the extracted Wiktionary data for Czech language.
 
 ## Using step-by-step
-- download wiktionary data and extract wf relations (both using the main project)
+- download wiktionary data and extract wf relations and make comparison of builded data with DeriNet's data (using `Makefile`)
 ```
-make cswiktionary
-make enwiktionary
-...
-python3 wiktionary.py -d ... -l ... -o ...
-```
-- make comparison of builded data with DeriNet's data (using `Makefile` in this project)
-```
-make cswkt
-make enwkt
-...
+make cswikt
+make enwikt
+make dewikt
 ```
 - merge created files for better manual annotating in future
 ```

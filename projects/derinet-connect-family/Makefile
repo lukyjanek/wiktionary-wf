@@ -1,14 +1,23 @@
 SHELL=/bin/bash
 
+all: cswikt enwikt dewikt frwikt plwikt merge
+
 cswikt:
-	python3 comparison.py -w data/cs_wkt.dat -d data/derinet-1-5-1.tsv -i output/cs/inside.dat -o output/cs/outside.dat -c output/cs/comparatives.dat -n output/cs/noncomparatives.dat -a output/cs/all-relations.dat
+	python3 ../../wiktionary.py -d ../../data/cswiktionary-20180120-pages-articles-multistream.xml.bz2 -l cs -o data/cs.wkt -s data/cs.stat
+	python3 comparison.py -w data/cs.wkt -d data/derinet-1-5-1.tsv -i output/cs/inside.dat -o output/cs/outside.dat -c output/cs/comparatives.dat -n output/cs/noncomparatives.dat -a output/cs/all-relations.dat
 
 enwikt:
-	python3 comparison.py -w data/en_wkt.dat -d data/derinet-1-5-1.tsv -i output/en/inside.dat -o output/en/outside.dat -c output/en/comparatives.dat -n output/en/noncomparatives.dat -a output/en/all-relations.dat
+	python3 ../../wiktionary.py -d ../../data/enwiktionary-20180120-pages-articles-multistream.xml.bz2 -l ze -o data/cs-en.wkt -s data/cs-en.stat
+	python3 comparison.py -w data/cs-en.wkt -d data/derinet-1-5-1.tsv -i output/cs-en/inside.dat -o output/cs-en/outside.dat -c output/cs-en/comparatives.dat -n output/cs-en/noncomparatives.dat -a output/cs-en/all-relations.dat
 
 dewikt:
-	python3 comparison.py -w data/de_wkt.dat -d data/derinet-1-5-1.tsv -i output/de/inside.dat -o output/de/outside.dat -c output/de/comparatives.dat -n output/de/noncomparatives.dat -a output/de/all-relations.dat
+	python3 ../../wiktionary.py -d ../../data/dewiktionary-20180120-pages-articles-multistream.xml.bz2 -l zd -o data/cs-de.wkt -s data/cs-de.stat
+	python3 comparison.py -w data/cs-de.wkt -d data/derinet-1-5-1.tsv -i output/cs-de/inside.dat -o output/cs-de/outside.dat -c output/cs-de/comparatives.dat -n output/cs-de/noncomparatives.dat -a output/cs-de/all-relations.dat
+
+frwikt:
+
+plwikt:
 
 merge:
-	python3 merging.py -m output/cs/comparatives.dat,output/en/comparatives.dat,output/de/comparatives.dat -o output/merged-comparatives.dat
-	python3 merging.py -m output/cs/noncomparatives.dat,output/en/noncomparatives.dat,output/de/noncomparatives.dat -o output/merged-noncomparatives.dat
+	python3 merging.py -m output/cs/comparatives.dat,output/cs-en/comparatives.dat,output/cs-de/comparatives.dat -o output/merged-comparatives.dat
+	python3 merging.py -m output/cs/noncomparatives.dat,output/cs-en/noncomparatives.dat,output/cs-de/noncomparatives.dat -o output/merged-noncomparatives.dat

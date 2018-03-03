@@ -41,6 +41,6 @@ if (__name__ == '__main__'):
         merged = merge_dicts(merged, new)
 
     # filtering by length and saving
-    from comparison import filter_length, print_root_parents
-    merged = filter_length(merged)
+    from comparison import rotate_length, print_root_parents
+    merged = rotate_length(merged)
     print_root_parents(par.o, merged)
