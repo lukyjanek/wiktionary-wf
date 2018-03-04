@@ -7,16 +7,21 @@ import re
 cs_pos = {'podstatné jméno' : 'N', 'přídavné jméno' : 'A', 'zájmeno' : 'P', 'číslovka' : 'C', 'sloveso' : 'V', 'příslovce' : 'D', 'předložka' : 'R', 'spojka' : 'J', 'citoslovce' : 'I', 'částice' : 'T'}
 en_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
 de_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
+fr_pos = {'verbe' : 'V', 'nom' : 'N', 'adjectif' : 'A', 'prénom' : 'N', 'adverbe' : 'D', 'numerál' : 'C', 'préposition' : 'R', 'conjonction' : 'J', 'particule' : 'T', 'interjection' : 'I'}
+
 ze_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
 zd_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
+zf_pos = {'verbe' : 'V', 'nom' : 'N', 'adjectif' : 'A', 'prénom' : 'N', 'adverbe' : 'D', 'numerál' : 'C', 'préposition' : 'R', 'conjonction' : 'J', 'particule' : 'T', 'interjection' : 'I'}
 
 # language recognition
 regex1 = {
 'cs' : r'== čeština ==\n(.*\n)*',
 'en' : r'==English==\n(.*\n)*.*',
 'de' : r'Sprache\|Deutsch.*\n(.*\n)*',
+'fr' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)*',
 'ze' : r'==Czech==\n(.*\n)*.*',
-'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*'
+'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*',
+'zf' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)*'
 }
 
 # number of languages for lexeme recognitions
@@ -24,8 +29,10 @@ regex2 = {
 'cs' : r'((?<!=)== )',
 'en' : r'((?<!=)==[A-Z])',
 'de' : r'Sprache\|\w+',
+'fr' : r'\{\{langue\|\w+',
 'ze' : r'((?<!=)==[A-Z])',
-'zd' : r'Sprache\|\w+'
+'zd' : r'Sprache\|\w+',
+'zf' : r'\{\{langue\|\w+'
 }
 
 # extraction language
@@ -33,8 +40,10 @@ regex3 = {
 'cs' : r'== čeština ==\n(.*\n)*?(== )',
 'en' : r'==English==\n(.*\n)*?(----)',
 'de' : r'Sprache\|Deutsch.*\n(.*\n)*?(== )',
+'fr' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)?(== \{\{langue\|)',
 'ze' : r'==Czech==\n(.*\n)*?(----)',
-'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*?(== )'
+'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*?(== )',
+'zf' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)?(== \{\{langue\|)'
 }
 
 # extraction pos
@@ -42,8 +51,10 @@ regex4 = {
 'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))',
 'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
 'de' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))',
+'fr' : r'S\|((nom)|(adjectif)|(prénom)|(verbe)|(addverbe)|(numerál)|(préposition)|(conjonction)|(particule)|(interjection))\|',
 'ze' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
-'zd' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))'
+'zd' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))',
+'zf' : r'S\|((nom)|(adjectif)|(prénom)|(verbe)|(addverbe)|(numerál)|(préposition)|(conjonction)|(particule)|(interjection))\|'
 }
 
 # extraction wf
@@ -51,8 +62,10 @@ regex5 = {
 'cs' : [r'==={1,} související ==={1,}\n(([\*\#].*\n)*)'],
 'en' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
 'de' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
+'fr' : [r'\|dérivés\}.*\n(.*\n)*?(==)', r'\|apparentés.*\n(.*\n)*?(==)', r'\|gentilés.*\n(.*\n)*?(==)', r'\|composés.*\n(.*\n)*?(==)'],
 'ze' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
 'zd' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
+'zf' : [r'\|dérivés\}.*\n(.*\n)*?(==)', r'\|apparentés.*\n(.*\n)*?(==)', r'\|gentilés.*\n(.*\n)*?(==)', r'\|composés.*\n(.*\n)*?(==)']
 }
 
 def extract(lang, data):
@@ -173,9 +186,38 @@ def de(text):
 
     return wfs
 
+def fr(text):
+    text = re.findall(r'[\{\[](.*?[?\]\}])', text)
+    wfs = set()
+    for item in text:
+        item = item.replace('dérivés', '')
+        item = item.replace('apparentés', '')
+        item = item.replace('gentilés', '')
+        item = item.replace('composés', '')
+        item = item.replace('déverbaux', '')
+        item = item.replace('comp', '')
+        item = item.replace('super', '')
+        item = item.replace('lien|', '')
+        item = item.replace('recons', '')
+        item = item.replace('cf', '')
+        item = re.sub(r'sens\=\w+', '', item)
+        item = re.sub(r'\|cs(\||\})', '', item)
+        item = re.sub(r'\#cs.*?(\])', '', item)
+        rep = '|{}[]=#*():'
+        for i in rep:
+            item = item.replace(i, '')
+        item = item.split(',')
+        for word in item:
+            if not (word == ''):
+                wfs.add(word.strip())
+    return wfs
+
 # project derinet-connect-family
 def ze(text):
     return en(text)
 
 def zd(text):
     return de(text)
+
+def zf(text):
+    return fr(text)

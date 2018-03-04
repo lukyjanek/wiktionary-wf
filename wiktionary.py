@@ -39,7 +39,7 @@ with BZ2File(path) as xml_file:
         element.clear()
 
 # # Testing
-# with open('oute.txt', mode='w', encoding='utf-8') as f:
+# with open(file=par.o, mode='w', encoding='utf-8') as f:
 #     f.write('Number: ' + str(len(lexeme_data)) + '\n')
 #     for i,j in lexeme_data.items():
 #         f.write(i + '\n' + str(j) + '\n\n')
