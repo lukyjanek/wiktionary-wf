@@ -42,5 +42,5 @@ if (__name__ == '__main__'):
 
     # filtering by length and saving
     from comparison import rotate_length, print_root_parents
-    merged = rotate_length(merged)
+    # merged = rotate_length(merged)
     print_root_parents(par.o, merged)

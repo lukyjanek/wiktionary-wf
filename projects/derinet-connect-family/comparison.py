@@ -157,11 +157,11 @@ if (__name__ == '__main__'):
         allexisted = filter_parents_out(der, existedparents)
         composites, noncomposites = filter_composites(allexisted)
         if (par.c):
-            composites = rotate_length(composites)
+            # composites = rotate_length(composites)
             print_root_parents(par.c, composites)
         if (par.n):
-            noncomposites = rotate_length(noncomposites)
+            # noncomposites = rotate_length(noncomposites)
             print_root_parents(par.n, noncomposites)
         if (par.a):
-            allexisted = rotate_length(allexisted)
+            # allexisted = rotate_length(allexisted)
             print_root_parents(par.a, allexisted)
