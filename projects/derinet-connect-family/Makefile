@@ -15,11 +15,13 @@ dewikt:
 	python3 comparison.py -w data/cs-de.wkt -d data/derinet-1-5-1.tsv -i output/cs-de/inside.dat -o output/cs-de/outside.dat -c output/cs-de/composites.dat -n output/cs-de/noncomposites.dat -a output/cs-de/all-relations.dat
 
 frwikt:
-	python3 ../../wiktionary.py -d ../../data/frwiktionary-20180120-pages-articles-multistream.xml.bz2 -l zd -o data/cs-fr.wkt -s data/cs-fr.stat
+	python3 ../../wiktionary.py -d ../../data/frwiktionary-20180120-pages-articles-multistream.xml.bz2 -l zf -o data/cs-fr.wkt -s data/cs-fr.stat
 	python3 comparison.py -w data/cs-fr.wkt -d data/derinet-1-5-1.tsv -i output/cs-fr/inside.dat -o output/cs-fr/outside.dat -c output/cs-fr/composites.dat -n output/cs-fr/noncomposites.dat -a output/cs-fr/all-relations.dat
 
 plwikt:
+	python3 ../../wiktionary.py -d ../../data/plwiktionary-20180120-pages-articles-multistream.xml.bz2 -l zp -o data/cs-pl.wkt -s data/cs-pl.stat
+	python3 comparison.py -w data/cs-pl.wkt -d data/derinet-1-5-1.tsv -i output/cs-pl/inside.dat -o output/cs-pl/outside.dat -c output/cs-pl/composites.dat -n output/cs-pl/noncomposites.dat -a output/cs-pl/all-relations.dat
 
 merge:
-	python3 merging.py -m output/cs/composites.dat,output/cs-en/composites.dat,output/cs-de/composites.dat,output/cs-fr/composites.dat -o output/merged-composites.dat
-	python3 merging.py -m output/cs/noncomposites.dat,output/cs-en/noncomposites.dat,output/cs-de/noncomposites.dat,output/cs-fr/noncomposites.dat -o output/merged-noncomposites.dat
+	python3 merging.py -m output/cs/composites.dat,output/cs-en/composites.dat,output/cs-de/composites.dat,output/cs-fr/composites.dat,output/cs-pl/composites.dat -o output/merged-composites.dat
+	python3 merging.py -m output/cs/noncomposites.dat,output/cs-en/noncomposites.dat,output/cs-de/noncomposites.dat,output/cs-fr/noncomposites.dat,output/cs-pl/noncomposites.dat -o output/merged-noncomposites.dat
