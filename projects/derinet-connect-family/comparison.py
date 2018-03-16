@@ -22,9 +22,13 @@ def inDeriNet(word): # function given boolean about existence in DeriNet
     try:
         if (pos == 'N') or (pos == 'A') or (pos == 'D') or (pos == 'V'): state = der.get_lexeme(node=lexeme, pos=pos)
         else: state = der.get_lexeme(node=lexeme)
-        return True
+        return (True, '')
     except:
-        return False
+        try:
+            state = der.get_lexeme(node=lexeme, pos=pos+'C')
+            return (True, 'C')
+        except:
+            return (False, '')
 
 def search(nl, target): # searching in recursive list (DeriNet's subtree of lexeme)
     for node in nl:
@@ -44,14 +48,15 @@ def exist_in_derinet(der, wordlist):
     outside_more = set() # set of lexeme out of DeriNet consisting of more words
 
     for word in wordlist:
-        if (inDeriNet(word) is True):
-            if (' ' in word): inside_more.add(word)
-            else: inside_one.add(word)
-            inside.add(word)
+        inD = inDeriNet(word)
+        if (inD[0] is True):
+            if (' ' in word): inside_more.add(word+inD[1])
+            else: inside_one.add(word+inD[1])
+            inside.add(word+inD[1])
         else:
-            if (' ' in word): outside_more.add(word)
-            else: outside_one.add(word)
-            outside.add(word)
+            if (' ' in word): outside_more.add(word+inD[1])
+            else: outside_one.add(word+inD[1])
+            outside.add(word+inD[1])
     return inside, outside, inside_more, inside_one, outside_more, outside_one
 
 def parents_for_derinet_root(der, relations):
@@ -70,8 +75,9 @@ def parents_for_derinet_root(der, relations):
     existedparents = defaultdict(set)
     for root,parents in allparents.items():
         for parent in parents:
-            if (inDeriNet(parent) is True):
-                existedparents[root].add(parent)
+            inD = inDeriNet(parent)
+            if (inD[0] is True):
+                existedparents[root].add(parent+inD[1])
     return existedparents
 
 def filter_parents_out(der, dic): # filter parents which are childs of root
