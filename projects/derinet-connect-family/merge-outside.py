@@ -23,12 +23,13 @@ for path in files:
             line = line.split('_')
 
             punct = False
-            for p in string.punctuation:
+            allPunctuation = string.punctuation + '–“—„ '
+            for p in allPunctuation:
                 if (p in line[0]):
                     punct = True
                     break
 
-            if not (' ' in line[0]) and not (punct):
+            if not (punct):
                 allOutside.add(line[0] + '_' + line[1])
 
 # saving

@@ -84,7 +84,7 @@ def filter_parents_out(der, dic): # filter parents which are childs of root
     parentsout = defaultdict(set)
     for root, parents in dic.items():
         for parent in parents:
-            subtree = der.get_subtree(node=root.split('_')[0], pos=root.split('_')[1])
+            subtree = der.get_subtree(der.get_root(node=root.split('_')[0], pos=root.split('_')[1]))
             if (parent.split('_')[1] == 'N') or (parent.split('_')[1] == 'A') or (parent.split('_')[1] == 'V') or (parent.split('_')[1] == 'D'):
                 if (search(subtree, der.get_lexeme(node=parent.split('_')[0], pos=parent.split('_')[1])) is False):
                     parentsout[root].add(parent)
