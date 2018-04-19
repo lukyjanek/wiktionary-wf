@@ -2,23 +2,28 @@ SHELL=/bin/bash
 
 data = 'data/'
 
-cswikt:
-	wget 'https://dumps.wikimedia.org/cswiktionary/20180120/cswiktionary-20180120-pages-articles-multistream.xml.bz2' -P $(data)
+prepare:
+	mkdir -p output
+
+cswikt: prepare
+	# wget 'https://dumps.wikimedia.org/cswiktionary/20180120/cswiktionary-20180120-pages-articles-multistream.xml.bz2' -P $(data)
 	python3 wiktionary.py -d data/cswiktionary-20180120-pages-articles-multistream.xml.bz2 -l cs -o output/cs.wkt -s output/cs.stat
 
-enwikt:
+enwikt: prepare
 	wget 'https://dumps.wikimedia.org/enwiktionary/20180120/enwiktionary-20180120-pages-articles-multistream.xml.bz2' -P $(data)
 	python3 wiktionary.py -d data/enwiktionary-20180120-pages-articles-multistream.xml.bz2 -l en -o output/en.wkt -s output/en.stat
 
-dewikt:
+dewikt: prepare
 	wget 'https://dumps.wikimedia.org/dewiktionary/20180201/dewiktionary-20180201-pages-articles-multistream.xml.bz2' -P $(data)
-	python3 wiktionary.py -d data/dewiktionary-20180120-pages-articles-multistream.xml.bz2 -l cs -o output/de.wkt -s output/de.stat
+	python3 wiktionary.py -d data/dewiktionary-20180120-pages-articles-multistream.xml.bz2 -l de -o output/de.wkt -s output/de.stat
 
-frwikt:
+frwikt: prepare
 	wget 'https://dumps.wikimedia.org/frwiktionary/20180201/frwiktionary-20180201-pages-articles-multistream.xml.bz2' -P $(data)
+	python3 wiktionary.py -d data/frwiktionary-20180120-pages-articles-multistream.xml.bz2 -l fr -o output/fr.wkt -s output/fr.stat
 
-plwikt:
+plwikt: prepare
 	wget 'https://dumps.wikimedia.org/plwiktionary/20180201/plwiktionary-20180201-pages-articles-multistream.xml.bz2' -P $(data)
+	python3 wiktionary.py -d data/plwiktionary-20180120-pages-articles-multistream.xml.bz2 -l pl -o output/pl.wkt -s output/pl.stat
 
 eswikt:
 	wget 'https://dumps.wikimedia.org/eswiktionary/20180201/eswiktionary-20180201-pages-articles-multistream.xml.bz2' -P $(data)
@@ -82,3 +87,6 @@ ukwikt:
 
 uzwikt:
 	wget 'https://dumps.wikimedia.org/uzwiktionary/20180201/uzwiktionary-20180201-pages-articles-multistream.xml.bz2' -P $(data)
+
+clean:
+	rm -rf __pycache__ patterns/__pycache__

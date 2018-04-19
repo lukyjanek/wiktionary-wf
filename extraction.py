@@ -3,84 +3,15 @@
 
 import re
 
-# translation of pos tag
-cs_pos = {'podstatné jméno' : 'N', 'přídavné jméno' : 'A', 'zájmeno' : 'P', 'číslovka' : 'C', 'sloveso' : 'V', 'příslovce' : 'D', 'předložka' : 'R', 'spojka' : 'J', 'citoslovce' : 'I', 'částice' : 'T'}
-en_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
-de_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
-fr_pos = {'verbe' : 'V', 'nom' : 'N', 'adjectif' : 'A', 'prénom' : 'N', 'adverbe' : 'D', 'numerál' : 'C', 'préposition' : 'R', 'conjonction' : 'J', 'particule' : 'T', 'interjection' : 'I'}
-pl_pos = {'rzeczownik' : 'N', 'rzeczownik' : 'N', 'przymiotnik' : 'A', 'przysłówek' : 'D', 'czasownik' : 'V', 'partykuła' : 'T', 'wykrzyknik' : 'I', 'skrótowiec' : 'N', 'liczebnik' : 'C', 'zaimek' : 'P', 'skrót' : 'N', 'imiesłów' : 'V', 'przyimek' : 'R', 'spójnik' : 'J'}
+# Extraction patterns
+from patterns.langrecog import regex1
+from patterns.langsepar import regex2
+from patterns.lemmacont import regex3
+from patterns.lemmapost import regex4
+from patterns.lemmawfs import regex5
+from patterns.posdict import *
 
-ze_pos = {'Noun' : 'N', 'Adjective' : 'A', 'Pronoun' : 'P', 'Numeral' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Preposition' : 'R', 'Conjugation' : 'J'}
-zd_pos = {'Substantiv' : 'N', 'Adjektiv' : 'A', 'Interrogativpronomen' : 'P', 'Demonstrativpronomen' : 'P', 'Numerale' : 'C', 'Verb' : 'V', 'Adverb' : 'D', 'Präposition' : 'R', 'Konjunktion' : 'J', 'Interjektion' : 'I', 'Pronominaladverb' : 'D', 'Temporaladverb' : 'D', 'Partikel' : 'T', 'Komparativ' : 'A', 'Superlativ' : 'A'}
-zf_pos = {'verbe' : 'V', 'nom' : 'N', 'adjectif' : 'A', 'prénom' : 'N', 'adverbe' : 'D', 'numerál' : 'C', 'préposition' : 'R', 'conjonction' : 'J', 'particule' : 'T', 'interjection' : 'I'}
-zp_pos = {'rzeczownik' : 'N', 'rzeczownik' : 'N', 'przymiotnik' : 'A', 'przysłówek' : 'D', 'czasownik' : 'V', 'partykuła' : 'T', 'wykrzyknik' : 'I', 'skrótowiec' : 'N', 'liczebnik' : 'C', 'zaimek' : 'P', 'skrót' : 'N', 'imiesłów' : 'V', 'przyimek' : 'R', 'spójnik' : 'J'}
-
-
-# language recognition
-regex1 = {
-'cs' : r'== čeština ==\n(.*\n)*',
-'en' : r'==English==\n(.*\n)*.*',
-'de' : r'Sprache\|Deutsch.*\n(.*\n)*',
-'fr' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)*',
-'pl' : r'\{język polski\}.*\n(.*\n)*',
-'ze' : r'==Czech==\n(.*\n)*.*',
-'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*',
-'zf' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)*',
-'zp' : r'\{język czeski\}.*\n(.*\n)*'
-}
-
-# number of languages for lexeme recognitions
-regex2 = {
-'cs' : r'((?<!=)== )',
-'en' : r'((?<!=)==[A-Z])',
-'de' : r'Sprache\|\w+',
-'fr' : r'\{\{langue\|\w+',
-'pl' : r'\=\=\s\w+',
-'ze' : r'((?<!=)==[A-Z])',
-'zd' : r'Sprache\|\w+',
-'zf' : r'\{\{langue\|\w+',
-'zp' : r'\=\=\s\w+'
-}
-
-# extraction language
-regex3 = {
-'cs' : r'== čeština ==\n(.*\n)*?(== )',
-'en' : r'==English==\n(.*\n)*?(----)',
-'de' : r'Sprache\|Deutsch.*\n(.*\n)*?(== )',
-'fr' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)?(== \{\{langue\|)',
-'pl' : r'\{język polski\}.*\n(.*\n)*?(\=\=\s\w+)',
-'ze' : r'==Czech==\n(.*\n)*?(----)',
-'zd' : r'Sprache\|Tschechisch.*\n(.*\n)*?(== )',
-'zf' : r'== \{\{langue\|cs\}\} ==.*\n(.*\n)?(== \{\{langue\|)',
-'zp' : r'\{język czeski\}.*\n(.*\n)*?(\=\=\s\w+)'
-}
-
-# extraction pos
-regex4 = {
-'cs' : r'=={1,} ((podstatné jméno)|(přídavné jméno)|(zájmeno)|(číslovka)|(sloveso)|(příslovce)|(předložka)|(spojka)|(citoslovce)|(částice)) ((\(1\) )|(=={1,}))',
-'en' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
-'de' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))',
-'fr' : r'S\|((nom)|(adjectif)|(prénom)|(verbe)|(adverbe)|(numerál)|(préposition)|(conjonction)|(particule)|(interjection))\|',
-'pl' : r'\{\{znaczenia\}\}\n\'\'((rzeczownik)|(rzeczownik)|(przysłówek)|(przymiotnik)|(czasownik)|(partykuła)|(wykrzyknik)|(skrótowiec)|(liczebnik)|(zaimek)|(skrót)|(imiesłów)|(przyimek)|(spójnik))[\s\,\']',
-'ze' : r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
-'zd' : r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)|(Partikel)|(Komparativ)|(Superlativ))',
-'zf' : r'S\|((nom)|(adjectif)|(prénom)|(verbe)|(addverbe)|(numerál)|(préposition)|(conjonction)|(particule)|(interjection))\|',
-'zp' : r'\{\{znaczenia\}\}\n\'\'((rzeczownik)|(rzeczownik)|(przysłówek)|(przymiotnik)|(czasownik)|(partykuła)|(wykrzyknik)|(skrótowiec)|(liczebnik)|(zaimek)|(skrót)|(imiesłów)|(przyimek)|(spójnik))[\s\,\']'
-}
-
-# extraction wf
-regex5 = {
-'cs' : [r'==={1,} související ==={1,}\n(([\*\#].*\n)*)'],
-'en' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
-'de' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
-'fr' : [r'\|dérivés\}.*\n(.*\n)*?(==)', r'\|apparentés.*\n(.*\n)*?(==)', r'\|gentilés.*\n(.*\n)*?(==)', r'\|composés.*\n(.*\n)*?(==)'],
-'pl' : [r'\{\{pokrewne\}\}\n\:(.*\n)*?(\{)'],
-'ze' : [r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'],
-'zd' : [r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)', r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'],
-'zf' : [r'\|dérivés\}.*\n(.*\n)*?(==)', r'\|apparentés.*\n(.*\n)*?(==)', r'\|gentilés.*\n(.*\n)*?(==)', r'\|composés.*\n(.*\n)*?(==)'],
-'zp' : [r'\{\{pokrewne\}\}\n\:(.*\n)*?(\{)']
-}
-
+# Extraction script
 def extract(lang, data):
     # entry contains information for language
     infos = re.search(regex1[lang], data)
@@ -104,13 +35,13 @@ def extract(lang, data):
 
         # cleaning and returning data
         if not (wf is ''):
-            # cleaning data, how dangerous 'eval()' is?
+            # cleaning data
             wfs = eval(lang)(wf)
             if (pos is None): return pos, wfs
-            return eval(lang+'_pos')[pos.group(1)], wfs # how dangerous 'eval()' is?
+            return eval(lang+'_pos')[pos.group(1)], wfs
     return None
 
-# cleaning wf relations
+# Cleaning extracted data
 def cs(text):
     text = text.replace('=\n', '')
     text = text.replace(' související ', '')
@@ -229,7 +160,7 @@ def pl(text):
     text = re.findall(r'\[\[(.*?)\]\]', text)
     return set(text)
 
-# project derinet-connect-family
+# project derinet-connect-family (cleaning)
 def ze(text):
     return en(text)
 

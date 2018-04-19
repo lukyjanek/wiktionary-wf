@@ -1,10 +1,25 @@
 SHELL=/bin/bash
 
-all: cswikt enwikt dewikt frwikt plwikt merge
+all: prepare derinet cswikt enwikt dewikt frwikt plwikt merge
+
+derinet:
+	git clone 'https://github.com/vidraj/derinet.git'
+	@mv 'derinet' 'derinet-git'
+	@cp -r 'derinet-git/tools/data-api/derinet2/derinet' .
+	@cp 'derinet-git/data/releases/cs/derinet-1-5-1.tsv' 'data/'
+	@rm -rf derinet-git
+
+prepare:
+	@mkdir -p output
+	@mkdir -p output/cs-cs
+	@mkdir -p output/cs-en
+	@mkdir -p output/cs-fr
+	@mkdir -p output/cs-de
+	@mkdir -p output/cs-pl
 
 cswikt:
 	python3 '../../wiktionary.py' -d '../../data/cswiktionary-20180120-pages-articles-multistream.xml.bz2' -l 'cs' -o 'data/cs.wkt' -s 'data/cs.stat'
-	python3 'comparison.py' -w 'data/cs.wkt' -d 'data/derinet-1-5-1.tsv' -i 'output/cs/inside.dat' -o 'output/cs/outside.dat' -c 'output/cs/composites.dat' -n 'output/cs/noncomposites.dat' -a 'output/cs/all-relations.dat'
+	python3 'comparison.py' -w 'data/cs.wkt' -d 'data/derinet-1-5-1.tsv' -i 'output/cs-cs/inside.dat' -o 'output/cs-cs/outside.dat' -c 'output/cs-cs/composites.dat' -n 'output/cs-cs/noncomposites.dat' -a 'output/cs-cs/all-relations.dat'
 
 enwikt:
 	python3 '../../wiktionary.py' -d '../../data/enwiktionary-20180120-pages-articles-multistream.xml.bz2' -l 'ze' -o 'data/cs-en.wkt' -s 'data/cs-en.stat'
@@ -23,6 +38,6 @@ plwikt:
 	python3 'comparison.py' -w 'data/cs-pl.wkt' -d 'data/derinet-1-5-1.tsv' -i 'output/cs-pl/inside.dat' -o 'output/cs-pl/outside.dat' -c 'output/cs-pl/composites.dat' -n 'output/cs-pl/noncomposites.dat' -a 'output/cs-pl/all-relations.dat'
 
 merge:
-	python3 'merge-relations.py' -m 'output/cs/composites.dat,output/cs-en/composites.dat,output/cs-de/composites.dat,output/cs-fr/composites.dat,output/cs-pl/composites.dat' -o 'output/merged-composites.dat'
-	python3 'merge-relations.py' -m 'output/cs/noncomposites.dat,output/cs-en/noncomposites.dat,output/cs-de/noncomposites.dat,output/cs-fr/noncomposites.dat,output/cs-pl/noncomposites.dat' -o 'output/merged-noncomposites.dat'
-	python3 'merge-outside.py' -m 'output/cs/outside.dat,output/cs-de/outside.dat,output/cs-en/outside.dat,output/cs-fr/outside.dat,output/cs-pl/outside.dat' -o 'output/merged-outside.dat'
+	python3 'merge-relations.py' -m 'output/cs-cs/composites.dat,output/cs-en/composites.dat,output/cs-de/composites.dat,output/cs-fr/composites.dat,output/cs-pl/composites.dat' -o 'output/merged-composites.dat'
+	python3 'merge-relations.py' -m 'output/cs-cs/noncomposites.dat,output/cs-en/noncomposites.dat,output/cs-de/noncomposites.dat,output/cs-fr/noncomposites.dat,output/cs-pl/noncomposites.dat' -o 'output/merged-noncomposites.dat'
+	python3 'merge-outside.py' -m 'output/cs-cs/outside.dat,output/cs-de/outside.dat,output/cs-en/outside.dat,output/cs-fr/outside.dat,output/cs-pl/outside.dat' -o 'output/merged-outside.dat'

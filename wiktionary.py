@@ -8,7 +8,7 @@ from collections import defaultdict
 from extraction import extract
 from statistics import Statistics
 
-# arguments parsing
+# Arguments parsing
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', action='store', dest='d', required=True, help='the .bz2 Wiktionary data')
 parser.add_argument('-l', action='store', dest='l', required=True, help='the language abr. of Wiktionary data')
