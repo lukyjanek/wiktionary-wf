@@ -46,7 +46,6 @@ def extract(lang, data):
             if (pos is None):
                 return pos, wfs
             return choose(lang, pos.group(1)), wfs
-            # return eval('postdict.'+lang+'_pos')[pos.group(1)], wfs
     return None
 
 
