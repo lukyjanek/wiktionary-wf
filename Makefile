@@ -6,7 +6,7 @@ prepare:
 	mkdir -p output
 
 cswikt: prepare
-	# wget 'https://dumps.wikimedia.org/cswiktionary/20180120/cswiktionary-20180120-pages-articles-multistream.xml.bz2' -P $(data)
+	wget 'https://dumps.wikimedia.org/cswiktionary/20180120/cswiktionary-20180120-pages-articles-multistream.xml.bz2' -P $(data)
 	python3 wiktionary.py -d data/cswiktionary-20180120-pages-articles-multistream.xml.bz2 -l cs -o output/cs.wkt -s output/cs.stat
 
 enwikt: prepare

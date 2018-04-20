@@ -1,18 +1,22 @@
 # !usr/bin/env python3
 # coding: utf-8
 
+"""Code for extraction WF relations using regular expressions."""
+
 import re
 
-# Extraction patterns
+# Importing patterns for extraction
 from patterns.langrecog import regex1
 from patterns.langsepar import regex2
 from patterns.lemmacont import regex3
 from patterns.lemmapost import regex4
 from patterns.lemmawfs import regex5
-from patterns.posdict import *
+from patterns.posdict import choose
 
-# Extraction script
+
+# Extraction
 def extract(lang, data):
+    """Extract wf relations and return them."""
     # entry contains information for language
     infos = re.search(regex1[lang], data)
 
@@ -22,7 +26,8 @@ def extract(lang, data):
         if (len(more) > 1):
             # extract one language only
             infos = re.search(regex3[lang], infos.group(0))
-            if not (infos): return None
+            if not (infos):
+                return None
 
         # extract pos
         pos = re.search(regex4[lang], infos.group(0))
@@ -31,18 +36,23 @@ def extract(lang, data):
         wf = ''
         for reg in regex5[lang]:
             derivations = re.search(reg, infos.group(0))
-            if not (derivations is None): wf += derivations.group(0)
+            if not (derivations is None):
+                wf += derivations.group(0)
 
         # cleaning and returning data
         if not (wf is ''):
             # cleaning data
             wfs = eval(lang)(wf)
-            if (pos is None): return pos, wfs
-            return eval(lang+'_pos')[pos.group(1)], wfs
+            if (pos is None):
+                return pos, wfs
+            return choose(lang, pos.group(1)), wfs
+            # return eval('postdict.'+lang+'_pos')[pos.group(1)], wfs
     return None
 
-# Cleaning extracted data
+
+# Cleaning extrated data
 def cs(text):
+    """Clean Czech extracted data."""
     text = text.replace('=\n', '')
     text = text.replace(' související ', '')
     text = re.sub(r'\<.*\>', '', text)
@@ -54,7 +64,9 @@ def cs(text):
     text = text.replace(', ', '\n')
     return set(text.strip().split('\n'))
 
+
 def en(text):
+    """Clean English extracted data."""
     def clean(entry):
         entry = entry.replace('{', '')
         entry = entry.replace('}', '')
@@ -73,8 +85,10 @@ def en(text):
     text = re.sub(r'\|pos=.*?(\}|\|)', '', text)
     text = re.sub(r"[Tt]erm(s)* derived.*?(\}|\])", '', text)
     text = text.replace('\n', '')
-    wfs1 = re.findall(r"(\|\-*[\w+['’\.\-\s]{1,}]*\-*[\}\]])", text, flags=re.UNICODE)
-    wfs2 = re.findall(r"([\*\#][\s.\w]*\[\[\-*[\w+[’'\.\-\s]*]*\]\])", text, flags=re.UNICODE)
+    r1 = r"(\|\-*[\w+['’\.\-\s]{1,}]*\-*[\}\]])"
+    wfs1 = re.findall(r1, text, flags=re.UNICODE)
+    r2 = r"([\*\#][\s.\w]*\[\[\-*[\w+[’'\.\-\s]*]*\]\])"
+    wfs2 = re.findall(r2, text, flags=re.UNICODE)
     wfs3 = re.findall(r"(\{der[0-9].*\}\})", text, flags=re.UNICODE)
     wfs = wfs1 + wfs2 + wfs3
     out = set()
@@ -95,13 +109,17 @@ def en(text):
                 entry = re.sub(r'\n.\n', '\n', entry)
                 entry = entry.split('\n')
                 for w in entry:
-                    if not (w == ''): out.add(w.strip())
+                    if not (w == ''):
+                        out.add(w.strip())
             else:
                 entry = clean(entry)
-                if not (entry == ''): out.add(entry.strip())
+                if not (entry == ''):
+                    out.add(entry.strip())
     return out
 
+
 def de(text):
+    """Clean German extracted data."""
     text = text.replace('=', '')
     text = text.replace(':', '')
     text = text.replace('{', '')
@@ -127,10 +145,11 @@ def de(text):
         word = word.replace(']', '')
         if not (word == ''):
             wfs.add(word)
-
     return wfs
 
+
 def fr(text):
+    """Clean French extracted data."""
     text = re.findall(r'[\{\[](.*?[?\]\}])', text)
     wfs = set()
     for item in text:
@@ -156,19 +175,29 @@ def fr(text):
                 wfs.add(word.strip())
     return wfs
 
+
 def pl(text):
+    """Clean Polish extracted data."""
     text = re.findall(r'\[\[(.*?)\]\]', text)
     return set(text)
 
+
 # project derinet-connect-family (cleaning)
 def ze(text):
+    """Clean Czech extracted data from English mutation of wiktionary."""
     return en(text)
 
+
 def zd(text):
+    """Clean Czech extracted data from Germany mutation of wiktionary."""
     return de(text)
 
+
 def zf(text):
+    """Clean Czech extracted data from French mutation of wiktionary."""
     return fr(text)
 
+
 def zp(text):
+    """Clean Czech extracted data from Polish mutation of wiktionary."""
     return pl(text)
