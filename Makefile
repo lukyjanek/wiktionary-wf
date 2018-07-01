@@ -2,6 +2,8 @@ SHELL=/bin/bash
 
 data = 'data/'
 
+all: cswikt enwikt dewikt frwikt plwikt eswikt elwikt cawikt cywikt etwikt fiwikt hrwikt huwikt itwikt lawikt ltwikt mgwikt nlwikt mywikt nowikt rowikt ruwikt skwikt svwikt ukwikt uzwikt
+
 prepare:
 	mkdir -p output
 
