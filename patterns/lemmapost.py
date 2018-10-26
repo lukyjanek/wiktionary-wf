@@ -22,22 +22,5 @@ regex4 = {
     'pl': r'\{\{znaczenia\}\}\n\'\'((rzeczownik)|(rzeczownik)|(przysłówek)'
           r'|(przymiotnik)|(czasownik)|(partykuła)|(wykrzyknik)|(skrótowiec)'
           r'|(liczebnik)|(zaimek)|(skrót)|(imiesłów)|(przyimek)'
-          r'|(spójnik))[\s\,\']',
-
-    # project derinet-connect-family
-    'ze': r'=={1,}((Noun)|(Adjective)|(Pronoun)|(Numeral)|(Verb)|(Adverb)'
-          r'|(Preposition)|(Conjugation))(( \(1\) )|(=={1,}))',
-
-    'zd': r'Wortart\|((Substantiv)|(Adjektiv)|(Interrogativpronomen)'
-          r'|(Demonstrativpronomen)|(Numerale)|(Verb)|(Adverb)|(Präposition)'
-          r'|(Konjunktion)|(Interjektion)|(Pronominaladverb)|(Temporaladverb)'
-          r'|(Partikel)|(Komparativ)|(Superlativ))',
-
-    'zf': r'S\|((nom)|(adjectif)|(prénom)|(verbe)|(addverbe)|(numerál)'
-          r'|(préposition)|(conjonction)|(particule)|(interjection))\|',
-
-    'zp': r'\{\{znaczenia\}\}\n\'\'((rzeczownik)|(rzeczownik)|(przysłówek)'
-          r'|(przymiotnik)|(czasownik)|(partykuła)|(wykrzyknik)|(skrótowiec)'
-          r'|(liczebnik)|(zaimek)|(skrót)|(imiesłów)|(przyimek)'
           r'|(spójnik))[\s\,\']'
 }

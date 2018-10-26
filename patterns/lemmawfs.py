@@ -29,29 +29,5 @@ regex5 = {
 
     'pl': [
             r'\{\{pokrewne\}\}\n\:(.*\n)*?(\{)'
-          ],
-
-    # project derinet-connect-family
-    'ze': [
-            r'==={1,}Derived terms==={1,}\n(.*\n)*?(\n|={1,})'
-          ],
-
-    'zd': [
-            r'\{\{Wortbildungen\}\}\n(.*\n)*?(==|\{\{)',
-            r'\{\{Verkleinerungsformen\}\}\n(.*\n)*?(==|\{\{)',
-            r'\{\{Weibliche Wortformen\}\}\n(.*\n)*?(==|\{\{)',
-            r'\{\{Männliche Wortformen\}\}\n(.*\n)*?(==|\{\{)',
-            r'\{\{Koseformen\}\}\n(.*\n)*?(==|\{\{)'
-          ],
-
-    'zf': [
-            r'\|dérivés\}.*\n(.*\n)*?(==)',
-            r'\|apparentés.*\n(.*\n)*?(==)',
-            r'\|gentilés.*\n(.*\n)*?(==)',
-            r'\|composés.*\n(.*\n)*?(==)'
-          ],
-
-    'zp': [
-            r'\{\{pokrewne\}\}\n\:(.*\n)*?(\{)'
           ]
 }

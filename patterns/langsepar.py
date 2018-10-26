@@ -8,11 +8,5 @@ regex2 = {
     'en': r'((?<!=)==[A-Z])',
     'de': r'Sprache\|\w+',
     'fr': r'\{\{langue\|\w+',
-    'pl': r'\=\=\s\w+',
-
-    # project derinet-connect-family
-    'ze': r'((?<!=)==[A-Z])',
-    'zd': r'Sprache\|\w+',
-    'zf': r'\{\{langue\|\w+',
-    'zp': r'\=\=\s\w+'
+    'pl': r'\=\=\s\w+'
 }
