@@ -26,13 +26,13 @@ androgenize_V	androgenous_A	androgen_N	antiandrogen_N	androgenemia_N	xenoandroge
 ## Table of already published or processed data
 
 | Language (in Czech) | Abbrev. | Date of dump | Version |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | Czech (čeština) | cs | 20181020 | 1.0 (26/10/2018) |
 | English (angličtina) | en | 20181020 | 1.0 (26/10/2018) |
 | French (francouzština) | fr | 20181020 | 1.0 (26/10/2018) |
 | German (němčina) | de | 20181020 | 1.0 (26/10/2018) |
 | Polish (polština) | pl | 20181020 | 1.0 (26/10/2018) |
-| Malga (malgaština) | mg | | | |
+| Malga (malgaština) | mg | | |
 | Catalan (katalánština) | ca | | |
 | Estonian (estonština) | et | | |
 | Greek (řečtina) | el | | |
