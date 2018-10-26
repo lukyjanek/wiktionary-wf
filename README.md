@@ -24,8 +24,9 @@ androgenize_V	androgenous_A	androgen_N	antiandrogen_N	androgenemia_N	xenoandroge
 ```
 
 ## Table of already published or processed data
+
 | Language (in Czech) | Abbrev. | Date of dump | Version |
-| --- | --- | --- | ---| --- |
+| --- | --- | --- | --- | --- |
 | Czech (čeština) | cs | 20181020 | 1.0 (26/10/2018) |
 | English (angličtina) | en | 20181020 | 1.0 (26/10/2018) |
 | French (francouzština) | fr | 20181020 | 1.0 (26/10/2018) |
@@ -69,5 +70,5 @@ After that, the target extracts derivational relations (`wiktionary.py`) and sav
 
 Then, the target converts derivational families from the directed graphs of lexemes into the complete graphs of lexemes (`buildfamilies.py`). Used flags: *-i* means input data, *-o* means output data.
 
---
+---
 File `extraction.py` contains functions for extraction and cleaning extracted data (is used by `wiktionary.py`) from semi-structured Wiktionary. Specific regular expressions are included in individual files (used by `extraction.py`) in folder `patterns/`.
